@@ -1,29 +1,35 @@
 import { Injectable } from "@nestjs/common";
 import { UsersRepository } from "./users.repository";
+import { User } from "./user.interface";
 
 @Injectable()
 export class UsersService {
-    
-    
     constructor(private usersRepository: UsersRepository) {}
 
-    getUsers() {
-        return this.usersRepository.getUsers();
+    async getUsers(page = 1, limit = 5) {
+        const users = await this.usersRepository.getUsers(page, limit);
+        return users.map(({password, ...rest}) => rest);
     }
 
-    getUserById(id: number) {
-        return this.usersRepository.getUserById(id);
+    async getUserById(id: number) {
+        const user = await this.usersRepository.getUserById(id);
+        if (!user) return null;
+        const { password, ...rest} = user;
+        return rest;
     }
 
-    createUser(user: any) {
-        return this.usersRepository.createUser(user);
+    async createUser(user: User) {
+        const newUser = await this.usersRepository.createUser(user);
+        return {id: newUser.id};
     }
     
-    updateUser(id: number, updateUser: any) {
-        return this.usersRepository.updateUser(id, updateUser);
+    async updateUser(id: number, updateUser: User) {
+        const updated = await this.usersRepository.updateUser(id, updateUser);
+        return {id: updated?.id};
     }
 
-    deleteUser(id: number) {
-        return this.usersRepository.deleteUser(id);
+    async deleteUser(id: number) {
+        const deleted = await this.usersRepository.deleteUser(id);
+        return {id: deleted?.id};
     }
 }

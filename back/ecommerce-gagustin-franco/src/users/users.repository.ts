@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { User } from "./user.interface";
 
 @Injectable()
 export class UsersRepository {
@@ -36,15 +37,17 @@ export class UsersRepository {
         }
     ];
 
-    async getUsers(){
-        return this.users;
+    async getUsers(page: number, limit:number): Promise<User[]>{
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        return this.users.slice(startIndex, endIndex);
     }
 
     async getUserById(id: number) {
         return this.users.find((user) => user.id === id);
     }
 
-    async createUser(user:any) {
+    async createUser(user:User) {
         const newUser = {
             id: this.users.length + 1,
             ...user
@@ -53,7 +56,7 @@ export class UsersRepository {
         return newUser;
     }
 
-    async updateUser(id: number, updatedUser: any) {
+    async updateUser(id: number, updatedUser: User) {
         const index = this.users.findIndex(user => user.id === id);
         if (index === -1) return null;
     

@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { Product } from "./product.interface";
 
 @Injectable()
 export class ProductsRepository {
@@ -30,15 +31,17 @@ export class ProductsRepository {
         }
     ];
     
-    async getProducts(){
-        return this.products;
+    async getProducts(page: number, limit: number): Promise<Product[]>{
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        return this.products.slice(startIndex, endIndex);
     }
 
     async getProductsById(id: number) {
         return this.products.find((product) => product.id === id)
     }
 
-    createProduct(product: any) {
+    createProduct(product: Product) {
         const newUser = {
             id: this.products.length + 1,
             ...product
@@ -47,7 +50,7 @@ export class ProductsRepository {
         return newUser;
     }
 
-    async updateProduct(id: number, updatedProduct: any) {
+    async updateProduct(id: number, updatedProduct: Product) {
         const index = this.products.findIndex(product => product.id === id);
         if (index === -1) return null;
     
