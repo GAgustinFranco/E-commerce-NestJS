@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, Query, UseGuards } from "@nestjs/common";
 import { UsersService} from "./users.service"
-import { User } from "./user.interface";
 import { AuthGuard } from "src/auth/auth.guard";
+import { User } from "./entities/users.entity";
 
 @Controller("users")
 export class UsersController {
@@ -23,7 +23,7 @@ export class UsersController {
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
         getUserById(@Param("id") id: string){
-            return this.usersService.getUserById(Number(id));
+            return this.usersService.getUserById(id);
         }
 
         @Post()
@@ -36,7 +36,7 @@ export class UsersController {
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
         updateUser(@Param("id") id: string, @Body() updateUser: User) {
-            return this.usersService.updateUser(Number(id), updateUser);
+            return this.usersService.updateUser(id, updateUser);
         }
 
         @Delete(":id")

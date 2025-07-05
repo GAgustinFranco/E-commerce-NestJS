@@ -1,8 +1,15 @@
-import { Injectable } from "@nestjs/common";
-import { User } from "./user.interface";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { User } from "./entities/users.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class UsersRepository {
+    constructor(
+        @InjectRepository(User)
+        private readonly repository: Repository<User>
+    ){}
+
         
     private users = [
         {
@@ -37,31 +44,43 @@ export class UsersRepository {
         }
     ];
 
-    async getUsers(page: number, limit:number): Promise<User[]>{
-        const startIndex = (page - 1) * limit;
-        const endIndex = page * limit;
-        return this.users.slice(startIndex, endIndex);
+    async getUsers(page: number, limit: number): Promise<User[]>{
+        return this.repository.find({
+            skip: (page - 1) * limit,
+            take: limit,
+        });
     }
 
-    async getUserById(id: number) {
-        return this.users.find((user) => user.id === id);
+    async getUserById(id: string) {
+        const user = await this.repository.findOne({
+            where: {id},
+            relations: ["orders"]
+        });
+
+        if (!user) throw new NotFoundException(`User with id ${id} not found`);
+        const orders = user.orders?.map((order) => ({
+            id: order.id,
+            date: order.date
+        }));
+
+        const { password, ...rest } = user;
+        return {...rest, orders};
     }
 
-    async createUser(user:User) {
-        const newUser = {
-            id: this.users.length + 1,
-            ...user
-        };
-        this.users.push(newUser);
-        return newUser;
+    async createUser(user:User): Promise<User> {
+        const newUser = this.repository.create(user);
+        return await this.repository.save(newUser)
     }
 
-    async updateUser(id: number, updatedUser: User) {
-        const index = this.users.findIndex(user => user.id === id);
-        if (index === -1) return null;
-    
-        this.users[index] = { ...this.users[index], ...updatedUser };
-        return this.users[index];
+    async updateUser(id: string, updatedUser: Partial<User>): Promise<User | null > {
+        const user =  await this.repository.preload({
+            id,
+            ...updatedUser
+        });
+
+        if (!user) return null;
+        
+        return await this.repository.save(user);
     }
 
     async deleteUser(id: number) {

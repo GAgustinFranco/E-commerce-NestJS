@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { UsersRepository } from "./users.repository";
-import { User } from "./user.interface";
+import { User } from "./entities/users.entity"
 
 @Injectable()
 export class UsersService {
@@ -11,11 +11,8 @@ export class UsersService {
         return users.map(({password, ...rest}) => rest);
     }
 
-    async getUserById(id: number) {
-        const user = await this.usersRepository.getUserById(id);
-        if (!user) return null;
-        const { password, ...rest} = user;
-        return rest;
+    async getUserById(id: string) {
+        return this.usersRepository.getUserById(id);
     }
 
     async createUser(user: User) {
@@ -23,7 +20,7 @@ export class UsersService {
         return {id: newUser.id};
     }
     
-    async updateUser(id: number, updateUser: User) {
+    async updateUser(id: string, updateUser: User) {
         const updated = await this.usersRepository.updateUser(id, updateUser);
         return {id: updated?.id};
     }

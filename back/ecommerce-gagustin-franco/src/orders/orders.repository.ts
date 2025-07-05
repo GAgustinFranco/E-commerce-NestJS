@@ -7,10 +7,14 @@ import { User } from '../users/entities/users.entity';
 import { Product } from '../products/entities/products.entity';
 import { OrderDetail } from '../order-details/entities/order-details.entity';
 import { v4 as uuid } from 'uuid';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
-export class OrderRepository extends Repository<Order> {
-    constructor(private dataSource: DataSource) {
+export class OrdersRepository extends Repository<Order> {
+    constructor(
+        @InjectRepository(Order)
+        private readonly repository: Repository<Order>,
+        private dataSource: DataSource) {
         super(Order, dataSource.createEntityManager());
     }
 

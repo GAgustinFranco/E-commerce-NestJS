@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { OrderRepository } from './orders.repository';
+import { OrdersRepository } from './orders.repository';
 import { CreateOrderDto } from './dto/createOrder.dto';
 import { Order } from './entities/orders.entity';
 
 @Injectable()
-export class OrderService {
+export class OrdersService {
   constructor(
-    @InjectRepository(OrderRepository)
-    private readonly orderRepository: OrderRepository
+    @InjectRepository(OrdersRepository)
+    private readonly orderRepository: OrdersRepository
   ) {}
 
   async createOrder(createOrderDto: CreateOrderDto): Promise<Order> {
