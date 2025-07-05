@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, Query, UseGuards } from "@nestjs/common";
 import { ProductsService } from "./products.service";
-import { Product } from "./product.interface";
+import { Product } from "./entities/products.entity";
 import { AuthGuard } from "src/auth/auth.guard";
 
 @Controller("products")
@@ -8,7 +8,7 @@ export class ProductsController {
     constructor(private readonly productsService: ProductsService) {}
         @Get()
         @HttpCode(HttpStatus.OK)
-        getProducts(
+        async getProducts(
             @Query("page") page?: string,
             @Query("limit") limit?:string
         ) {
@@ -20,28 +20,35 @@ export class ProductsController {
 
         @Get(":id")
         @HttpCode(HttpStatus.OK)
-        getProductById(@Param("id") id: string){
+        async getProductById(@Param("id") id: string){
             return this.productsService.getProductsById(Number(id));
         }
         
         @Post()
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.CREATED)
-        createProduct(@Body() product: Product) {
+        async createProduct(@Body() product: Product) {
             return this.productsService.createProduct(product) 
+        }
+
+        @Post('seeder')
+        async seedProducts() {
+            const data = require('../assets/act3');
+            const result = await this.productsService.addProductsFromSeeder(data.productsP);
+            return { message: 'Productos precargados', result };
         }
         
         @Put(":id")
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
-        updateProduct(@Param("id") id: string, @Body() updateProduct: Product) {
-            return this.productsService.updateProduct(Number(id), updateProduct);
+        async updateProduct(@Param("id") id: string, @Body() updateProduct: Product) {
+            return this.productsService.updateProduct(id, updateProduct);
         }
         
         @Delete(":id")
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
-        deleteProduct(@Param("id") id: string) {
+        async deleteProduct(@Param("id") id: string) {
             return this.productsService.deleteProduct(Number(id));
         }
 }

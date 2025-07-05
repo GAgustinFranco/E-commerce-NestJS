@@ -1,10 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { ProductsRepository } from "./products.repository";
-import { Product } from "./product.interface";
+import { CategoriesRepository } from "src/categories/categories.repository";
+import { Product } from "./entities/products.entity";
 
 @Injectable()
 export class ProductsService {
-    constructor(private productsRepository: ProductsRepository ){}
+    constructor(private productsRepository: ProductsRepository,
+                private categoriesRepository: CategoriesRepository
+    ){}
 
         async getProducts(page = 1, limit = 5) {
             return this.productsRepository.getProducts(page, limit);
@@ -14,15 +17,51 @@ export class ProductsService {
             return this.productsRepository.getProductsById(id);
         }
 
-        async createProduct(product: Product) {
-            const newProduct = await this.productsRepository.createProduct(product);
-            return {id: newProduct.id}
+        async createProduct(product: Partial<Product>): Promise<{ id: string } | null> {
+                if (product.stock !== undefined && typeof product.stock !== 'number') {
+                throw new Error('Stock must be a number');
+                }
+            
+                const categoryId = product.category && typeof product.category === 'object' && 'id' in product.category ? product.category.id : undefined;
+                let validatedProduct: Partial<Product> = { ...product, orderDetails: [] };
+            
+                if (categoryId) {
+                const category = await this.categoriesRepository.getCategories().then(categories =>
+                    categories.find(cat => cat.id === categoryId),
+                );
+                if (!category) {
+                    throw new Error('Category not found');
+                }
+                validatedProduct = { ...validatedProduct, category };
+                }
+            
+                const newProduct = await this.productsRepository.createProduct(validatedProduct);
+                return newProduct ? { id: newProduct.id } : null;
+            }
+
+        async addProductsFromSeeder(products: any[]) {
+            return this.productsRepository.addProducts(products, this.categoriesRepository);
         }
 
-        async updateProduct(id: number, updateProduct: Product) {
-            const updated = await this.productsRepository.updateProduct(id, updateProduct);
-            return {id: updated?.id}
-        }
+        async updateProduct(id: string, updateProduct: Partial<Product>): Promise<{ id: string } | null> {
+            if (updateProduct.stock !== undefined && typeof updateProduct.stock !== 'number') {
+                throw new Error('Stock must be a number');
+                }
+            
+                const categoryId = updateProduct.category && typeof updateProduct.category === 'object' && 'id' in updateProduct.category ? updateProduct.category.id : undefined;
+                const validatedProduct: Partial<Product> = { ...updateProduct };
+            
+                if (categoryId) {
+                const category = await this.categoriesRepository.getCategories().then(categories =>
+                    categories.find(cat => cat.id === categoryId),
+                );
+                if (!category) throw new Error('Category not found');
+                validatedProduct.category = category;
+                }
+            
+                const updated = await this.productsRepository.updateProduct(id, validatedProduct);
+                return updated ? { id: updated.id } : null;
+            }
 
         async deleteProduct(id:number){
             const deleted = await this.productsRepository.deleteProduct(id);
