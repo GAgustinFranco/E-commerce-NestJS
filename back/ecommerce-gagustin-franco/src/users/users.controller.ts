@@ -43,6 +43,6 @@ export class UsersController {
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
         deleteUser(@Param("id") id: string) {
-            return this.usersService.deleteUser(Number(id));
+            return this.usersService.deleteUser(id);
         }
 }

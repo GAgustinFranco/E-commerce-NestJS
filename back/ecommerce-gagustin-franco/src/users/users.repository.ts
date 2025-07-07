@@ -10,40 +10,6 @@ export class UsersRepository {
         private readonly repository: Repository<User>
     ){}
 
-        
-    private users = [
-        {
-            id: 1,
-            email: "string",
-            name: "Jorge",
-            password: "string",
-            address: "string",
-            phone: "string",
-            country: "string",
-            city: "string"
-        },
-        {
-            id: 2,
-            email: "string",
-            name: "Osvaldo",
-            password: "string",
-            address: "string",
-            phone: "string",
-            country: "string",
-            city: "string"
-        },
-        {
-            id: 3,
-            email: "string",
-            name: "Celene",
-            password: "string",
-            address: "string",
-            phone: "string",
-            country: "string",
-            city: "string"
-        }
-    ];
-
     async getUsers(page: number, limit: number): Promise<User[]>{
         return this.repository.find({
             skip: (page - 1) * limit,
@@ -83,11 +49,11 @@ export class UsersRepository {
         return await this.repository.save(user);
     }
 
-    async deleteUser(id: number) {
-        const index = this.users.findIndex(user => user.id === id);
-        if (index === -1) return null;
+    async deleteUser(id: string): Promise<User | null> {
+        const user = await this.repository.findOneBy({ id });
+        if (!user) return null;
     
-        const deleted = this.users.splice(index, 1);
-        return deleted[0];
+        await this.repository.remove(user);
+        return user;
     }
 }

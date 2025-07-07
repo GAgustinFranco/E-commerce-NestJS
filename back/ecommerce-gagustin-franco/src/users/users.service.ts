@@ -25,7 +25,7 @@ export class UsersService {
         return {id: updated?.id};
     }
 
-    async deleteUser(id: number) {
+    async deleteUser(id: string) {
         const deleted = await this.usersRepository.deleteUser(id);
         return {id: deleted?.id};
     }
