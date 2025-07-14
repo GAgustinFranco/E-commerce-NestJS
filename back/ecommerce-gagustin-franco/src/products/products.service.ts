@@ -13,7 +13,7 @@ export class ProductsService {
             return this.productsRepository.getProducts(page, limit);
         }
 
-        async getProductsById(id: number) {
+        async getProductsById(id: string) {
             return this.productsRepository.getProductsById(id);
         }
 
@@ -40,7 +40,7 @@ export class ProductsService {
             }
 
         async addProductsFromSeeder(products: any[]) {
-            return this.productsRepository.addProducts(products, this.categoriesRepository);
+            return this.productsRepository.addProductsFromSeeder(products, this.categoriesRepository);
         }
 
         async updateProduct(id: string, updateProduct: Partial<Product>): Promise<{ id: string } | null> {
@@ -63,7 +63,7 @@ export class ProductsService {
                 return updated ? { id: updated.id } : null;
             }
 
-        async deleteProduct(id:number){
+        async deleteProduct(id:string){
             const deleted = await this.productsRepository.deleteProduct(id);
             return {id: deleted?.id}
         }

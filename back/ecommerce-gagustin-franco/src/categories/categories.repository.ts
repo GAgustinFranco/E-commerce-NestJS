@@ -19,11 +19,11 @@ export class CategoriesRepository {
 
         for (const name of newCategories) {
         const exists = await this.categoriesRepository.findOne({ where: { name } });
-        if (!exists) {
-            const newCategory = this.categoriesRepository.create({ name, products: [] });
-            await this.categoriesRepository.save(newCategory);
-            added.push(newCategory);
-        }
+            if (!exists) {
+                const newCategory = this.categoriesRepository.create({ name, products: [] });
+                await this.categoriesRepository.save(newCategory);
+                added.push(newCategory);
+            }
         }
 
         return added;

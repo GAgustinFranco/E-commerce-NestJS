@@ -24,6 +24,7 @@ export class UsersRepository {
         });
 
         if (!user) throw new NotFoundException(`User with id ${id} not found`);
+        
         const orders = user.orders?.map((order) => ({
             id: order.id,
             date: order.date

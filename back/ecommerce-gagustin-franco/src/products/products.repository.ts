@@ -11,33 +11,6 @@ export class ProductsRepository {
         private productsRepository: Repository<Product>
     ) {}
     
-    private products = [
-        {
-            id:1,
-            name: "licuadora",
-            description: "string",
-            price: 40000,
-            stock: true,
-            imgUrl: "string"
-        },
-        {
-            id:2,
-            name: "heladera",
-            description: "string",
-            price: 500000,
-            stock: true,
-            imgUrl: "string"
-        },
-        {
-            id:3,
-            name: "televisor",
-            description: "string",
-            price: 50000,
-            stock: false,
-            imgUrl: "string"
-        }
-    ];
-    
     async getProducts(page: number, limit: number): Promise<Product[]> {
         return this.productsRepository.find({
             skip: (page - 1) * limit,
@@ -46,8 +19,11 @@ export class ProductsRepository {
             });
         }
 
-    async getProductsById(id: number) {
-        return this.products.find((product) => product.id === id)
+    async getProductsById(id: string) {
+        return this.productsRepository.findOne({
+            where: {id},
+            relations: ["category"]
+        });
     }
 
     async createProduct(product: Partial<Product>): Promise<Product | null> {
@@ -56,13 +32,13 @@ export class ProductsRepository {
     
         const newProduct = this.productsRepository.create({
             ...product,
-            imgUrl: product.imgUrl || undefined, // Usar el valor por defecto si no se proporciona
-            orderDetails: [], // Inicializar como arreglo vacío
+            imgUrl: product.imgUrl || undefined, 
+            orderDetails: [], 
             });
             return this.productsRepository.save(newProduct);
         }
 
-    async addProducts(products: any[], categoriesRepository: CategoriesRepository): Promise<Product[]> {
+    async addProductsFromSeeder(products: any[], categoriesRepository: CategoriesRepository): Promise<Product[]> {
         const added: Product[] = [];
     
         for (const productData of products) {
@@ -88,7 +64,6 @@ export class ProductsRepository {
             return added;
         }
     
-
     async updateProduct(id: string, updatedProduct: Partial<Product>): Promise<Product | null> {
         const product = await this.productsRepository.findOne({ where: { id } });
         if (!product) return null;
@@ -97,11 +72,11 @@ export class ProductsRepository {
         return this.productsRepository.findOne({ where: { id }, relations: ['category'] });
     }
 
-    async deleteProduct(id: number){
-        const index = this.products.findIndex(product => product.id === id);
-        if (index === -1) return null;
+    async deleteProduct(id: string){
+        const product = await this.productsRepository.findOne({ where: {id}});
+        if (!product) return null;
     
-        const deleted = this.products.splice(index, 1);
-        return deleted[0];
+        await this.productsRepository.remove(product);
+        return product;
     }
 }

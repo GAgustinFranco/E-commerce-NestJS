@@ -1,7 +1,7 @@
 import { Repository, DataSource, MoreThan } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { Order } from './entities/orders.entity';
-import { CreateOrderDto } from './dto/createOrder.dto';
+import { AddOrderDto } from './dto/addOrder.dto';
 import { NotFoundException } from '@nestjs/common';
 import { User } from '../users/entities/users.entity';
 import { Product } from '../products/entities/products.entity';
@@ -18,8 +18,21 @@ export class OrdersRepository extends Repository<Order> {
         super(Order, dataSource.createEntityManager());
     }
 
-    async addOrder(createOrderDto: CreateOrderDto): Promise<Order> {
-        const { userId, products } = createOrderDto;
+    async getOrder(orderId: string): Promise<Order> {
+        const order = await this.findOne({
+        where: { id: orderId },
+        relations: ['user', 'detail', 'detail.products'],
+        });
+
+        if (!order) {
+        throw new NotFoundException(`Orden con ID ${orderId} no encontrada`);
+        }
+
+        return order;
+    }
+
+    async addOrder(addOrderDto: AddOrderDto): Promise<Order> {
+        const { userId, products } = addOrderDto;
 
         const user = await this.manager.findOne(User, { where: { id: userId } });
         if (!user) {
@@ -59,19 +72,6 @@ export class OrdersRepository extends Repository<Order> {
 
         await this.manager.save(Order, order);
         await this.manager.save(OrderDetail, orderDetail);
-
-        return order;
-    }
-
-    async getOrder(orderId: string): Promise<Order> {
-        const order = await this.findOne({
-        where: { id: orderId },
-        relations: ['user', 'detail', 'detail.products'],
-        });
-
-        if (!order) {
-        throw new NotFoundException(`Orden con ID ${orderId} no encontrada`);
-        }
 
         return order;
     }

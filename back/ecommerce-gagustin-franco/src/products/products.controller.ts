@@ -21,7 +21,7 @@ export class ProductsController {
         @Get(":id")
         @HttpCode(HttpStatus.OK)
         async getProductById(@Param("id") id: string){
-            return this.productsService.getProductsById(Number(id));
+            return this.productsService.getProductsById(id);
         }
         
         @Post()
@@ -49,6 +49,6 @@ export class ProductsController {
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
         async deleteProduct(@Param("id") id: string) {
-            return this.productsService.deleteProduct(Number(id));
+            return this.productsService.deleteProduct(id);
         }
 }
