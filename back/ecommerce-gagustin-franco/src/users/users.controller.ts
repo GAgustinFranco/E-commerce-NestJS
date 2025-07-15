@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, Query, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, Query, UseGuards, ParseUUIDPipe } from "@nestjs/common";
 import { UsersService} from "./users.service"
 import { AuthGuard } from "src/auth/auth.guard";
-import { UpdateUserDto } from "./dto/updateUserDto";
-import { CreateUserDto } from "./dto/createUserDto";
+import { UpdateUserDto } from "./dto/UpdateUserDto";
+import { CreateUserDto } from "./dto/CreateUserDto";
 
 @Controller("users")
 export class UsersController {
@@ -23,7 +23,7 @@ export class UsersController {
         @Get(":id")
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
-        getUserById(@Param("id") id: string){
+        getUserById(@Param("id", ParseUUIDPipe) id: string){
             return this.usersService.getUserById(id);
         }
 
@@ -36,14 +36,14 @@ export class UsersController {
         @Put(":id")
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
-        updateUser(@Param("id") id: string, @Body() updateUser: UpdateUserDto) {
+        updateUser(@Param("id", ParseUUIDPipe) id: string, @Body() updateUser: UpdateUserDto) {
             return this.usersService.updateUser(id, updateUser);
         }
 
         @Delete(":id")
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
-        deleteUser(@Param("id") id: string) {
+        deleteUser(@Param("id", ParseUUIDPipe) id: string) {
             return this.usersService.deleteUser(id);
         }
 }

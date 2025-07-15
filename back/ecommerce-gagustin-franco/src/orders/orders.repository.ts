@@ -1,7 +1,7 @@
 import { Repository, DataSource, MoreThan } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { Order } from './entities/orders.entity';
-import { AddOrderDto } from './dto/addOrder.dto';
+import { CreateOrderDto } from './dto/CreateOrder.dto';
 import { NotFoundException } from '@nestjs/common';
 import { User } from '../users/entities/users.entity';
 import { Product } from '../products/entities/products.entity';
@@ -31,8 +31,8 @@ export class OrdersRepository extends Repository<Order> {
         return order;
     }
 
-    async addOrder(addOrderDto: AddOrderDto): Promise<Order> {
-        const { userId, products } = addOrderDto;
+    async createOrder(createOrderDto: CreateOrderDto): Promise<Order> {
+        const { userId, products } = createOrderDto;
 
         const user = await this.manager.findOne(User, { where: { id: userId } });
         if (!user) {
