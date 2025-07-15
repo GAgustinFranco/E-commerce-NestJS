@@ -2,6 +2,8 @@ import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, 
 import { ProductsService } from "./products.service";
 import { Product } from "./entities/products.entity";
 import { AuthGuard } from "src/auth/auth.guard";
+import { CreateProductDto } from "./dto/createProductDto";
+import { UpdateProductDto } from "./dto/updateProductDto";
 
 @Controller("products")
 export class ProductsController {
@@ -27,7 +29,7 @@ export class ProductsController {
         @Post()
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.CREATED)
-        async createProduct(@Body() product: Product) {
+        async createProduct(@Body() product: CreateProductDto) {
             return this.productsService.createProduct(product) 
         }
 
@@ -41,7 +43,7 @@ export class ProductsController {
         @Put(":id")
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
-        async updateProduct(@Param("id") id: string, @Body() updateProduct: Product) {
+        async updateProduct(@Param("id") id: string, @Body() updateProduct: UpdateProductDto) {
             return this.productsService.updateProduct(id, updateProduct);
         }
         

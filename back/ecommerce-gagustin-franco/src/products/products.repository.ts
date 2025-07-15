@@ -3,6 +3,8 @@ import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CategoriesRepository } from "../categories/categories.repository";
 import { Product } from "./entities/products.entity";
+import { CreateProductDto } from "./dto/createProductDto";
+import { UpdateProductDto } from "./dto/updateProductDto";
 
 @Injectable()
 export class ProductsRepository {
@@ -26,7 +28,7 @@ export class ProductsRepository {
         });
     }
 
-    async createProduct(product: Partial<Product>): Promise<Product | null> {
+    async createProduct(product: Partial<CreateProductDto>): Promise<Product | null> {
         const exists = await this.productsRepository.findOne({ where: { name: product.name } });
         if (exists) return null;
     
@@ -64,7 +66,7 @@ export class ProductsRepository {
             return added;
         }
     
-    async updateProduct(id: string, updatedProduct: Partial<Product>): Promise<Product | null> {
+    async updateProduct(id: string, updatedProduct: Partial<UpdateProductDto>): Promise<Product | null> {
         const product = await this.productsRepository.findOne({ where: { id } });
         if (!product) return null;
         
