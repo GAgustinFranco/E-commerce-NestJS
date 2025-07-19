@@ -11,42 +11,43 @@ export class UsersRepository {
         @InjectRepository(User)
         private readonly repository: Repository<User>
     ){}
-
+    
     async getUsers(page: number, limit: number): Promise<User[]>{
         return this.repository.find({
             skip: (page - 1) * limit,
             take: limit,
+            relations: ["files"]
         });
     }
-
+    
     async getUserById(id: string) {
         const user = await this.repository.findOne({
             where: {id},
-            relations: ["orders"]
+            relations: ["orders", "files"]
         });
-
+        
         if (!user) throw new NotFoundException(`User with id ${id} not found`);
         
         const orders = user.orders?.map((order) => ({
             id: order.id,
             date: order.date
         }));
-
+        
         const { password, ...rest } = user;
         return {...rest, orders};
     }
-
+    
     async createUser(user:CreateUserDto): Promise<User> {
         const newUser = this.repository.create(user);
         return await this.repository.save(newUser)
     }
-
+    
     async updateUser(id: string, updatedUser: Partial<UpdateUserDto>): Promise<User | null > {
         const user =  await this.repository.preload({
             id,
             ...updatedUser
         });
-
+        
         if (!user) return null;
         
         return await this.repository.save(user);

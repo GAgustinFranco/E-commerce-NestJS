@@ -11,6 +11,7 @@ import { CategoriesService } from './categories/categories.service';
 import { ProductsService } from './products/products.service';
 import typeOrmConfig from "./config/typeorm";
 import { productsP } from './assets/act3';
+import { FilesModule } from './files/files.module';
 
 
 
@@ -38,7 +39,8 @@ import { productsP } from './assets/act3';
     AuthModule,
     CategoriesModule,
     OrdersModule,
-    OrderDetailsModule],
+    OrderDetailsModule,
+    FilesModule],
   controllers: [],
   providers: [],
 })

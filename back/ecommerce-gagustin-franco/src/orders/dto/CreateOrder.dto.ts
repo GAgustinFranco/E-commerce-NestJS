@@ -1,14 +1,15 @@
-import { IsNotEmpty, IsUUID, ArrayMinSize, ValidateNested } from "class-validator";
-import { Type } from "class-transformer";
-import { ProductOrderDto } from "./ProductOrder.dto";
+import { IsNotEmpty, IsUUID, ArrayMinSize, IsArray } from "class-validator";
+
+export interface ProductId {
+    id: string;
+}
 
 export class CreateOrderDto {
     @IsNotEmpty()
     @IsUUID()
     userId: string;
 
-    @ValidateNested({ each: true})
-    @Type(() => ProductOrderDto)
     @ArrayMinSize(1)
-    products: ProductOrderDto[];
+    @IsArray()
+    products: Array<ProductId>;
 }

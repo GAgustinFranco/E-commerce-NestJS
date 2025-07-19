@@ -1,12 +1,16 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, Query, UseGuards, ParseUUIDPipe } from "@nestjs/common";
+import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, Query, UseGuards, ParseUUIDPipe} from "@nestjs/common";
 import { UsersService} from "./users.service"
 import { AuthGuard } from "src/auth/auth.guard";
 import { UpdateUserDto } from "./dto/UpdateUserDto";
 import { CreateUserDto } from "./dto/CreateUserDto";
+import { CloudinaryService } from "src/cloudinary/cloudinary.service";
 
 @Controller("users")
 export class UsersController {
-    constructor (private readonly usersService: UsersService) {}
+    constructor (
+        private readonly usersService: UsersService,
+        private readonly cloudinaryService: CloudinaryService
+    ){}
         @Get()
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)

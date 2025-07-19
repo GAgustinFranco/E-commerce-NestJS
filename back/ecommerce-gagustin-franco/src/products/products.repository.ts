@@ -6,11 +6,12 @@ import { Product } from "./entities/products.entity";
 import { CreateProductDto } from "./dto/CreateProductDto";
 import { UpdateProductDto } from "./dto/UpdateProductDto";
 
+
 @Injectable()
 export class ProductsRepository {
     constructor(
         @InjectRepository(Product)
-        private productsRepository: Repository<Product>
+        private readonly productsRepository: Repository<Product>,
     ) {}
     
     async getProducts(page: number, limit: number): Promise<Product[]> {
@@ -66,6 +67,10 @@ export class ProductsRepository {
             return added;
         }
     
+    async saveProduct(product: Product): Promise<Product> {
+            return this.productsRepository.save(product);
+        }
+
     async updateProduct(id: string, updatedProduct: Partial<UpdateProductDto>): Promise<Product | null> {
         const product = await this.productsRepository.findOne({ where: { id } });
         if (!product) return null;

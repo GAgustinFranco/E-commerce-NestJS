@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { v4 as uuid} from "uuid";
 import {Order} from "../../orders/entities/orders.entity";
+import { File } from "../../files/entities/file.entity";
 
 @Entity({
     name: "users"
@@ -32,4 +33,7 @@ export class User {
 
     @OneToMany(() => Order, (order) => order.user)
     orders: Order[]
+
+    @OneToMany(() => File, (files) => files.user)
+    files: File[];
 }

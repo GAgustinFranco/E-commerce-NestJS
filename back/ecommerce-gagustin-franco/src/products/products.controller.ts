@@ -1,13 +1,19 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, Query, UseGuards, ParseUUIDPipe } from "@nestjs/common";
+import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, Query, UseGuards, ParseUUIDPipe, UseInterceptors, UploadedFile } from "@nestjs/common";
 import { ProductsService } from "./products.service";
 import { Product } from "./entities/products.entity";
 import { AuthGuard } from "src/auth/auth.guard";
 import { CreateProductDto } from "./dto/CreateProductDto";
 import { UpdateProductDto } from "./dto/UpdateProductDto";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { FilesService } from "src/files/files.service";
+import { ValidateImagePipe } from "src/files/pipes/validate-image.pipe";
 
 @Controller("products")
 export class ProductsController {
-    constructor(private readonly productsService: ProductsService) {}
+    constructor(
+        private readonly productsService: ProductsService,
+        private readonly filesService: FilesService
+    ) {}
         @Get()
         @HttpCode(HttpStatus.OK)
         async getProducts(
@@ -39,6 +45,16 @@ export class ProductsController {
             const result = await this.productsService.addProductsFromSeeder(data.productsP);
             return { message: 'Productos precargados', result };
         }
+
+        @Post("uploadImage/:id")
+        @HttpCode(HttpStatus.OK)
+        @UseInterceptors(FileInterceptor("file"))
+        async uploadFile(
+            @Param("id", ParseUUIDPipe) id: string,
+            @UploadedFile(ValidateImagePipe) file: Express.Multer.File
+            ) {
+            return this.filesService.uploadImage(id, file);
+            }
         
         @Put(":id")
         @UseGuards(AuthGuard)
