@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { v4 as uuid} from "uuid";
 import {Order} from "../../orders/entities/orders.entity";
 import { File } from "../../files/entities/file.entity";
+import {Exclude} from "class-transformer";
 
 @Entity({
     name: "users"
@@ -30,6 +31,10 @@ export class User {
 
     @Column({length: 50, nullable: true})
     city: string
+
+    @Exclude()
+    @Column({default: false})
+    isAdmin: boolean;
 
     @OneToMany(() => Order, (order) => order.user)
     orders: Order[]

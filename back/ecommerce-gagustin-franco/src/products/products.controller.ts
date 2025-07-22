@@ -7,6 +7,9 @@ import { UpdateProductDto } from "./dto/UpdateProductDto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { FilesService } from "src/files/files.service";
 import { ValidateImagePipe } from "src/files/pipes/validate-image.pipe";
+import { RolesGuard } from "src/guards/roles.guard";
+import { Roles } from "src/decorators/roles.decorators";
+import { Role } from "src/auth/role.enum";
 
 @Controller("products")
 export class ProductsController {
@@ -58,7 +61,8 @@ export class ProductsController {
             }
         
         @Put(":id")
-        @UseGuards(AuthGuard)
+        @UseGuards(AuthGuard, RolesGuard)
+        @Roles(Role.Admin)
         @HttpCode(HttpStatus.OK)
         async updateProduct(@Param("id", ParseUUIDPipe) id: string, @Body() updateProduct: UpdateProductDto) {
             return this.productsService.updateProduct(id, updateProduct);

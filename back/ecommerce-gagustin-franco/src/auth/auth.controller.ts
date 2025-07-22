@@ -5,7 +5,7 @@ import { CreateUserDto } from './dto/CreateUserDto';
 import { DateAdderInterceptor } from 'src/interceptors/date-adder-interceptor/date-adder-interceptor.interceptor';
 
 
-@Controller("auth") //VER SI TODO ESTO VA EN USERSSSSSSSSSSSS
+@Controller("auth") 
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 

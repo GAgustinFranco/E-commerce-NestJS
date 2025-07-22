@@ -15,11 +15,6 @@ export class UsersService {
     async getUserById(id: string) {
         return this.usersRepository.getUserById(id);
     }
-
-    // async createUser(user: CreateUserDto) {
-    //     const newUser = await this.usersRepository.createUser(user);
-    //     return {id: newUser.id};
-    // }
     
     async updateUser(id: string, updateUser: UpdateUserDto) {
         const updated = await this.usersRepository.updateUser(id, updateUser);
