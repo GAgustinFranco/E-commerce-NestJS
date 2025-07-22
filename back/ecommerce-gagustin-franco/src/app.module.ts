@@ -12,6 +12,7 @@ import { ProductsService } from './products/products.service';
 import typeOrmConfig from "./config/typeorm";
 import { productsP } from './assets/act3';
 import { FilesModule } from './files/files.module';
+import { JwtModule } from '@nestjs/jwt';
 
 
 
@@ -40,7 +41,12 @@ import { FilesModule } from './files/files.module';
     CategoriesModule,
     OrdersModule,
     OrderDetailsModule,
-    FilesModule],
+    FilesModule,
+    JwtModule.register({
+      global: true,
+      signOptions: {expiresIn: "1h"},
+      secret: process.env.JWT_SECRET
+    })],
   controllers: [],
   providers: [],
 })

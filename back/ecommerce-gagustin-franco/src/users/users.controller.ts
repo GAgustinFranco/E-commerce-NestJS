@@ -1,8 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, Query, UseGuards, ParseUUIDPipe} from "@nestjs/common";
 import { UsersService} from "./users.service"
-import { AuthGuard } from "src/auth/auth.guard";
+import { AuthGuard } from "../auth/auth.guard";
 import { UpdateUserDto } from "./dto/UpdateUserDto";
-import { CreateUserDto } from "./dto/CreateUserDto";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
 
 @Controller("users")
@@ -29,12 +28,6 @@ export class UsersController {
         @HttpCode(HttpStatus.OK)
         getUserById(@Param("id", ParseUUIDPipe) id: string){
             return this.usersService.getUserById(id);
-        }
-
-        @Post()
-        @HttpCode(HttpStatus.CREATED)
-        createUser(@Body() user: CreateUserDto) {
-            return this.usersService.createUser(user); 
         }
 
         @Put(":id")

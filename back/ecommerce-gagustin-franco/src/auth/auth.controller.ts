@@ -1,27 +1,24 @@
-import { Controller, Post, Body, HttpException, HttpStatus, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, HttpException, HttpStatus, HttpCode, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/LoginUserDto';
+import { CreateUserDto } from './dto/CreateUserDto';
+import { DateAdderInterceptor } from 'src/interceptors/date-adder-interceptor/date-adder-interceptor.interceptor';
 
-@Controller("auth")
+
+@Controller("auth") //VER SI TODO ESTO VA EN USERSSSSSSSSSSSS
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
-      @Post("signin")
-      @HttpCode(HttpStatus.OK)
-      async signIn(@Body() LoginUserDto:LoginUserDto){
+    @Post("signup")
+    @UseInterceptors(DateAdderInterceptor)
+    @HttpCode(HttpStatus.CREATED)
+    async signUp(@Body() CreateUserDto: CreateUserDto) {
+        return this.authService.signUp(CreateUserDto); 
+    }
 
-      const { email, password } = LoginUserDto;
-      
-      if(!email || !password) {
-        throw new HttpException("Email or password incorrect", HttpStatus.UNAUTHORIZED)
-      }
-
-      const user = await this.authService.signIn(LoginUserDto);
-
-      if (!user) {
-          throw new HttpException("Email or password incorrect", HttpStatus.UNAUTHORIZED )
-      }
-
-      return {message: "Login successful", user};
+    @Post("signin")
+    @HttpCode(HttpStatus.OK)
+    async signIn(@Body() LoginUserDto:LoginUserDto){
+        return this.authService.signIn(LoginUserDto.email, LoginUserDto.password);
     }
 }

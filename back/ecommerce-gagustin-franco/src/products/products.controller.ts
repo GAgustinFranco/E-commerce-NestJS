@@ -47,6 +47,7 @@ export class ProductsController {
         }
 
         @Post("uploadImage/:id")
+        @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
         @UseInterceptors(FileInterceptor("file"))
         async uploadFile(

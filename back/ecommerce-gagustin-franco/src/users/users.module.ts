@@ -7,6 +7,7 @@ import { User } from "./entities/users.entity";
 import { File } from "src/files/entities/file.entity";
 import { CloudinaryConfig } from "src/config/cloudinary";
 import { CloudinaryService } from "src/cloudinary/cloudinary.service";
+import { AuthService } from "src/auth/auth.service";
 
 @Module({
     imports: [TypeOrmModule.forFeature([User, File])],
@@ -16,6 +17,7 @@ import { CloudinaryService } from "src/cloudinary/cloudinary.service";
         UsersRepository,
         CloudinaryConfig,
         CloudinaryService,
+        AuthService
     ],
     exports: [UsersRepository]
 })

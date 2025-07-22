@@ -1,33 +1,23 @@
-import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus} from "@nestjs/common";
-import { Request } from "express";
+import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus, UnauthorizedException} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import { Observable } from "rxjs";
-
-function validateRequest (request: Request): boolean {
-    const authHeader = request.headers["authorization"];
-
-    if(!authHeader) {
-        throw new HttpException("Authorization header is missing", HttpStatus.UNAUTHORIZED);
-    }
-
-    if (!authHeader.startsWith("Basic ")) {
-        throw new HttpException("Invalid authorization format", HttpStatus.UNAUTHORIZED);
-    }
-
-    const credentials = authHeader.slice(6); 
-
-    const [email, password] = credentials.split(":");
-
-    if (!email || !password) {
-        throw new HttpException("Invalid credentials format", HttpStatus.UNAUTHORIZED);
-    }
-
-    return true;
-}
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+    constructor(private readonly jwtService: JwtService){}
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
         const request = context.switchToHttp().getRequest();
-        return validateRequest(request);
+        const token = request.headers["authorization"]?.split(" ")[1];
+        if(!token) {
+            throw new UnauthorizedException("Bearer token not found");
+        }
+        try {
+            const secret = process.env.JWT_SECRET;
+            const payload =  this.jwtService.verify(token, {secret})
+            request.user = payload;
+            return true;
+        } catch (error){
+            throw new HttpException("Invalid token", HttpStatus.UNAUTHORIZED);
+        }
     }
 }
