@@ -2,9 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { File } from './entities/file.entity';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
-import { UsersRepository } from 'src/users/users.repository';
-import { ProductsRepository } from 'src/products/products.repository';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { ProductsRepository } from '../products/products.repository';
 
 @Injectable()
 export class FilesService {

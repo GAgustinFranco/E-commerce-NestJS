@@ -4,8 +4,8 @@ import { AuthGuard } from "../auth/auth.guard";
 import { UpdateUserDto } from "./dto/UpdateUserDto";
 import { CloudinaryService } from "../cloudinary/cloudinary.service";
 import { RolesGuard } from "../guards/roles.guard";
-import { Roles } from "src/decorators/roles.decorators";
-import { Role } from "src/auth/role.enum";
+import { Roles } from "../decorators/roles.decorators";
+import { Role } from "../auth/role.enum";
 import { plainToInstance } from "class-transformer";
 import {User} from "./entities/users.entity";
 

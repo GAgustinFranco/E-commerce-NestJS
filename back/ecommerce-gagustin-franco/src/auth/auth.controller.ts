@@ -2,7 +2,7 @@ import { Controller, Post, Body, HttpException, HttpStatus, HttpCode, UseInterce
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/LoginUserDto';
 import { CreateUserDto } from './dto/CreateUserDto';
-import { DateAdderInterceptor } from 'src/interceptors/date-adder-interceptor/date-adder-interceptor.interceptor';
+import { DateAdderInterceptor } from '../interceptors/date-adder-interceptor/date-adder-interceptor.interceptor';
 
 
 @Controller("auth") 

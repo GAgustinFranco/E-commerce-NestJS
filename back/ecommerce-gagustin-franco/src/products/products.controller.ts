@@ -1,15 +1,15 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, Query, UseGuards, ParseUUIDPipe, UseInterceptors, UploadedFile } from "@nestjs/common";
 import { ProductsService } from "./products.service";
 import { Product } from "./entities/products.entity";
-import { AuthGuard } from "src/auth/auth.guard";
+import { AuthGuard } from "../auth/auth.guard";
 import { CreateProductDto } from "./dto/CreateProductDto";
 import { UpdateProductDto } from "./dto/UpdateProductDto";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { FilesService } from "src/files/files.service";
-import { ValidateImagePipe } from "src/files/pipes/validate-image.pipe";
-import { RolesGuard } from "src/guards/roles.guard";
-import { Roles } from "src/decorators/roles.decorators";
-import { Role } from "src/auth/role.enum";
+import { FilesService } from "../files/files.service";
+import { ValidateImagePipe } from "../files/pipes/validate-image.pipe";
+import { RolesGuard } from "../guards/roles.guard";
+import { Roles } from "../decorators/roles.decorators";
+import { Role } from "../auth/role.enum";
 
 @Controller("products")
 export class ProductsController {

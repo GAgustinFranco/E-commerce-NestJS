@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CategoriesRepository } from "../categories/categories.repository";
@@ -23,6 +23,9 @@ export class ProductsRepository {
         }
 
     async getProductsById(id: string) {
+
+        if(!id) throw new HttpException("Product does not exist", HttpStatus.BAD_REQUEST);
+
         return this.productsRepository.findOne({
             where: {id},
             relations: ["category"]

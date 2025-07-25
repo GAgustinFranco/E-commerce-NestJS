@@ -14,7 +14,7 @@ export class CreateUserDto {
     @IsNotEmpty()
     @IsString()
     @MinLength(8)
-    @MaxLength(15)
+    @MaxLength(100)
     @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).+$/, {
         message: 'The password must contain at least one lowercase letter, one uppercase letter, one number, and one special character. (!@#$%^&*).',
     })
@@ -23,7 +23,7 @@ export class CreateUserDto {
     @IsNotEmpty()
     @IsString()
     @MinLength(8)
-    @MaxLength(15)
+    @MaxLength(100)
     @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).+$/, {
         message: 'The password must contain at least one lowercase letter, one uppercase letter, one number, and one special character. (!@#$%^&*).',
     })
