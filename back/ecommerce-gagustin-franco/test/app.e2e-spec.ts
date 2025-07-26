@@ -6,6 +6,8 @@ import { AppModule } from './../src/app.module';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
+  const timestamp = Date.now(); // Genera solo una vez
+  const testEmail = `test${timestamp}@test.com`;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -38,10 +40,10 @@ describe('AppController (e2e)', () => {
     expect(req.body.message).toBe("Validation failed (uuid is expected)")
   })
 
-  it("Post/users/signup/Returns a user with an OK status code", async () => {
+  it("Post/auth/signup/Returns a user with an CREATED status code", async () => {
     const req = await request(app.getHttpServer()).post("/auth/signup").send({
       name:"Test",
-      email:"test@test.com",
+      email:testEmail,
       password:"Test1234!",
       confirmPassword:"Test1234!",
       phone:3425678768,
@@ -53,7 +55,16 @@ describe('AppController (e2e)', () => {
   console.log(req.body);
   expect(req.status).toBe(201);
   expect(req.body).toBeInstanceOf(Object)
-
+  })
+  
+  it("Post/auth/signin/Returns a user with an OK status code", async () => {
+    const req = await request(app.getHttpServer()).post("/auth/signin").send({
+      email:testEmail,
+      password:"Test1234!"      
+  });
+  console.log(req.body);
+  expect(req.status).toBe(200);
+  expect(req.body).toBeInstanceOf(Object)
   })    
 });
 
