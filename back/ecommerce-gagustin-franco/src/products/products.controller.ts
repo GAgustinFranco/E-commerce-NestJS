@@ -10,7 +10,9 @@ import { ValidateImagePipe } from "../files/pipes/validate-image.pipe";
 import { RolesGuard } from "../guards/roles.guard";
 import { Roles } from "../decorators/roles.decorators";
 import { Role } from "../auth/role.enum";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Products")
 @Controller("products")
 export class ProductsController {
     constructor(
@@ -35,6 +37,7 @@ export class ProductsController {
             return this.productsService.getProductsById(id);
         }
         
+        @ApiBearerAuth()
         @Post()
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.CREATED)
@@ -49,6 +52,7 @@ export class ProductsController {
             return { message: 'Productos precargados', result };
         }
 
+        @ApiBearerAuth()
         @Post("uploadImage/:id")
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
@@ -60,6 +64,7 @@ export class ProductsController {
             return this.filesService.uploadImage(id, file);
             }
         
+        @ApiBearerAuth()
         @Put(":id")
         @UseGuards(AuthGuard, RolesGuard)
         @Roles(Role.Admin)
@@ -68,6 +73,7 @@ export class ProductsController {
             return this.productsService.updateProduct(id, updateProduct);
         }
         
+        @ApiBearerAuth()
         @Delete(":id")
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)

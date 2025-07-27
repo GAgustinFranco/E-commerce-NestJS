@@ -8,13 +8,16 @@ import { Roles } from "../decorators/roles.decorators";
 import { Role } from "../auth/role.enum";
 import { plainToInstance } from "class-transformer";
 import {User} from "./entities/users.entity";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Users")
 @Controller("users")
 export class UsersController {
     constructor (
         private readonly usersService: UsersService,
         private readonly cloudinaryService: CloudinaryService
     ){}
+        @ApiBearerAuth()
         @Get()
         @UseGuards(AuthGuard, RolesGuard)
         @Roles(Role.Admin)
@@ -30,6 +33,7 @@ export class UsersController {
             return plainToInstance(User, users, {excludeExtraneousValues: true})
         }
 
+        @ApiBearerAuth()
         @Get(":id")
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
@@ -37,6 +41,7 @@ export class UsersController {
             return await this.usersService.getUserById(id);
         }
 
+        @ApiBearerAuth()
         @Put(":id")
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)
@@ -44,6 +49,7 @@ export class UsersController {
             return await this.usersService.updateUser(id, updateUser);
         }
 
+        @ApiBearerAuth()
         @Delete(":id")
         @UseGuards(AuthGuard)
         @HttpCode(HttpStatus.OK)

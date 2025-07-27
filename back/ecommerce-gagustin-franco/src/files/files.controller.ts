@@ -2,7 +2,9 @@ import { Controller, Post, Param, UploadedFile, UseInterceptors, HttpCode, HttpS
 import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductsService } from '../products/products.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags("Files")
 @Controller('files')
 export class FilesController {
   constructor(

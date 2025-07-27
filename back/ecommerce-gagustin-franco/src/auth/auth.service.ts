@@ -54,7 +54,7 @@ export class AuthService {
         }
 
         const token = this.jwtService.sign(userPayload)
-
+        console.log("TOKEN:", token)
         return {success: "Login successful", token};
     }
 }
