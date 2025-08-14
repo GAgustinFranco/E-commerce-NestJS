@@ -18,6 +18,10 @@ export class CreateOrderDto {
     @IsArray()
     @ApiProperty({
         description:"Array of products",
+        example: [
+            { "id": "product-uuid-1" },
+            { "id": "product-uuid-2" }
+        ],
     })
     products: Array<ProductId>;
 }

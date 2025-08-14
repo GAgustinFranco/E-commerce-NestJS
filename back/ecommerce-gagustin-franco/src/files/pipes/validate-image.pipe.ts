@@ -1,5 +1,4 @@
 import {BadRequestException, Injectable,PipeTransform} from '@nestjs/common';
-    import { extname } from 'path';
     
     @Injectable()
     export class ValidateImagePipe implements PipeTransform {

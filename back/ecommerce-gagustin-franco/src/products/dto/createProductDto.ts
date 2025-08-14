@@ -10,7 +10,7 @@ export class CreateProductDto {
     @MaxLength(80)
     @ApiProperty({
         description:"Insert product name",
-        example: "Samsung TV"
+        example: "Samsung Flat 24 Ips"
     })
     name: string
 
@@ -20,7 +20,7 @@ export class CreateProductDto {
     @MaxLength(80)
     @ApiProperty({
         description:"Insert product description",
-        example: "You can play content (photos, music, and videos) stored on external devices such as smartphones, tablets, or flash drives on your TV by connecting them via USB ports. It also has HDMI inputs so you can connect audio and video players or game consoles."
+        example: "Minimalist design with 3-sided borderless display."
     })
     description: string
 
@@ -28,7 +28,7 @@ export class CreateProductDto {
     @IsNumber()
     @ApiProperty({
         description:"Insert product price",
-        example: "1500"
+        example: 1500
     })
     price: number
 
@@ -36,7 +36,7 @@ export class CreateProductDto {
     @IsNumber()
     @ApiProperty({
         description:"Insert product stock",
-        example: "10"
+        example: "15"
     })
     stock: number
 
@@ -50,7 +50,7 @@ export class CreateProductDto {
 
     @ApiProperty({
         description:"Insert categorie",
-        example: "TV"
+        example: "UUID of the category to which the product belongs",
     })
     category?: Category;
 

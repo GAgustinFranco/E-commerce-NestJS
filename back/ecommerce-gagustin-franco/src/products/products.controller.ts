@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus, Query, UseGuards, ParseUUIDPipe, UseInterceptors, UploadedFile } from "@nestjs/common";
 import { ProductsService } from "./products.service";
-import { Product } from "./entities/products.entity";
 import { AuthGuard } from "../auth/auth.guard";
 import { CreateProductDto } from "./dto/CreateProductDto";
 import { UpdateProductDto } from "./dto/UpdateProductDto";
@@ -51,18 +50,6 @@ export class ProductsController {
             const result = await this.productsService.addProductsFromSeeder(data.productsP);
             return { message: 'Productos precargados', result };
         }
-
-        @ApiBearerAuth()
-        @Post("uploadImage/:id")
-        @UseGuards(AuthGuard)
-        @HttpCode(HttpStatus.OK)
-        @UseInterceptors(FileInterceptor("file"))
-        async uploadFile(
-            @Param("id", ParseUUIDPipe) id: string,
-            @UploadedFile(ValidateImagePipe) file: Express.Multer.File
-            ) {
-            return this.filesService.uploadImage(id, file);
-            }
         
         @ApiBearerAuth()
         @Put(":id")

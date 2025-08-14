@@ -1,4 +1,4 @@
-import { Column, Entity,PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn } from "typeorm";
+import { Column, Entity,PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn, OneToMany } from "typeorm";
 import {v4 as uuid} from "uuid";
 import {User} from "../../users/entities/users.entity";
 import {OrderDetail} from "../../order-details/entities/order-details.entity";
@@ -16,10 +16,8 @@ export class Order {
     @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
     date: Date;
 
-    @OneToOne(() => OrderDetail, (detail) => detail.order, {
+    @OneToMany(() => OrderDetail, (detail) => detail.order, {
         cascade:true
     })
-
-    @JoinColumn()
-    detail: OrderDetail;
+    details: OrderDetail[];
 }

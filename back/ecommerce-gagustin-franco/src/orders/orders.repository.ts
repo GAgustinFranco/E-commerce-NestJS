@@ -21,7 +21,7 @@ export class OrdersRepository extends Repository<Order> {
     async getOrder(orderId: string): Promise<Order> {
         const order = await this.findOne({
         where: { id: orderId },
-        relations: ['user', 'detail', 'detail.products'],
+        relations: ['user', 'details', 'details.products'],
         });
 
         if (!order) {
@@ -68,11 +68,12 @@ export class OrdersRepository extends Repository<Order> {
         orderDetail.price += Number(product.price);
         }
 
-        order.detail = orderDetail;
+        order.details = [orderDetail];
 
         await this.manager.save(Order, order);
         await this.manager.save(OrderDetail, orderDetail);
 
-        return order;
+        const orderToReturn = await this.getOrder(order.id);
+        return orderToReturn;
     }
 }

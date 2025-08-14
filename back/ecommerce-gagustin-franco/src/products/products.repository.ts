@@ -26,10 +26,14 @@ export class ProductsRepository {
 
         if(!id) throw new HttpException("Product does not exist", HttpStatus.BAD_REQUEST);
 
-        return this.productsRepository.findOne({
+        const product = await this.productsRepository.findOne({
             where: {id},
             relations: ["category"]
         });
+
+        if (!product) throw new HttpException("Product not found", HttpStatus.NOT_FOUND);
+
+        return product;
     }
 
     async createProduct(product: Partial<CreateProductDto>): Promise<Product | null> {
