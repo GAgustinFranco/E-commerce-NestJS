@@ -10,7 +10,6 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class FilesController {
   constructor(
     private readonly filesService: FilesService,
-    private readonly productsService: ProductsService
     ) {}
 
     @ApiBearerAuth()

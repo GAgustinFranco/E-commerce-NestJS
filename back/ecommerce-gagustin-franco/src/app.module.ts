@@ -21,7 +21,7 @@ import { JwtModule } from '@nestjs/jwt';
   imports: [
     ConfigModule.forRoot({
       isGlobal:true,
-      envFilePath: ".env.development",
+      envFilePath: ".env",
       load: [typeOrmConfig]
     }),
     TypeOrmModule.forRootAsync({
