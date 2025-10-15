@@ -62,18 +62,21 @@ npm run build
 Crea un archivo .env en la raíz del proyecto con las siguientes variables:
 
 PORT=3000
-
+```
 ### Base de datos
+```bash
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=tu_password
 DB_NAME=ecommerce_db
-
+```
 ### JWT
+```bash
 JWT_SECRET=clave_super_segura
-
+```
 ### Cloudinary
+```bash
 CLOUDINARY_CLOUD_NAME=tu_cloud_name
 CLOUDINARY_API_KEY=tu_api_key
 CLOUDINARY_API_SECRET=tu_api_secret
